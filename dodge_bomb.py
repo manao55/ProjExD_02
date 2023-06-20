@@ -91,16 +91,17 @@ def main():
         
         """
         試行錯誤の足跡
+        
+        angle = 0
+        if sum_mv[0] < 0:  # 左方向への移動
+            angle = 90
+        elif sum_mv[0] > 0:  # 右方向への移動
+            angle = 270
+        elif sum_mv[1] < 0:  # 上方向への移動
+            angle = 0
+        elif sum_mv[1] > 0:  # 下方向への移動
+            angle = 180
         """
-        # angle = 0
-        # if sum_mv[0] < 0:  # 左方向への移動
-        #     angle = 90
-        # elif sum_mv[0] > 0:  # 右方向への移動
-        #     angle = 270
-        # elif sum_mv[1] < 0:  # 上方向への移動
-        #     angle = 0
-        # elif sum_mv[1] > 0:  # 下方向への移動
-        #     angle = 180
  
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, kk_rct)
@@ -114,10 +115,10 @@ def main():
             bd_size += 1  # サイズを1増やす
             if bd_size >= 500:  # 最大サイズに達したら
                 bd_expand = False
-        # else:
-        #     bd_size -= 1  # サイズを1減らす
-        #     if bd_size <= 20:  # 最小サイズに達したら
-        #         bd_expand = True
+        else:
+             bd_size -= 1  # サイズを1減らす
+             if bd_size <= 20:  # 最小サイズに達したら
+                 bd_expand = True
         bd_img = pg.Surface((bd_size, bd_size))  # 爆弾のサイズを変更
         bd_img.set_colorkey((0, 0, 0))  # 黒い部分を透明にする
         pg.draw.circle(bd_img, (255, 0, 0), (bd_size // 2, bd_size // 2), bd_size // 2)
