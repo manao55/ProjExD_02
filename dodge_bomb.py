@@ -62,6 +62,7 @@ def main():
     bd_size = 20  # 爆弾の初期サイズ
     bd_expand = True  # 爆弾の拡大フラグ
     ###
+    one = 1
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -111,6 +112,7 @@ def main():
             vx *= -1
         if not tate:  # 縦方向に範囲外だったら
             vy *= -1
+
         if bd_expand:
             bd_size += 1  # サイズを1増やす
             if bd_size >= 500:  # 最大サイズに達したら
@@ -119,6 +121,12 @@ def main():
              bd_size -= 1  # サイズを1減らす
              if bd_size <= 20:  # 最小サイズに達したら
                  bd_expand = True
+        """
+        簡略化例
+        bd_size += one
+        if bd_size >= 500 or bd_size <= 20:
+            one *= -1
+        """
         bd_img = pg.Surface((bd_size, bd_size))  # 爆弾のサイズを変更
         bd_img.set_colorkey((0, 0, 0))  # 黒い部分を透明にする
         pg.draw.circle(bd_img, (255, 0, 0), (bd_size // 2, bd_size // 2), bd_size // 2)
