@@ -11,18 +11,20 @@ delta = {
     pg.K_RIGHT: (+5, 0),
 }
 
+
 def check_bound(rect: pg.Rect) -> tuple[bool, bool]:
     """
-    こうかとんRect,爆弾Rectが画面外 or 画面内かを判定する関数
-    引数:こうかとんRect or 爆弾Rect
-    戻り値：横方向,縦方向の判定結果タプル（True：画面内／False：画面外）
+    こうかとんRect，爆弾Rectが画面外 or 画面内かを判定する関数
+    引数：こうかとんRect or 爆弾Rect
+    戻り値：横方向，縦方向の判定結果タプル（True：画面内／False：画面外）
     """
     yoko, tate = True, True
-    if rect.left < 0 or WIDTH < rect.right: 
+    if rect.left < 0 or WIDTH < rect.right:  # 横方向判定
         yoko = False
-    if rect.top < 0 or HEIGHT < rect.bottom:
+    if rect.top < 0 or HEIGHT < rect.bottom:  # 縦方向判定
         tate = False
     return yoko, tate
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -43,6 +45,16 @@ def main():
     # 爆弾Rectの中心座標を乱数で指定する
     bd_rct.center = x, y 
     vx, vy = +5, +5  # 練習２
+    kk_zis = {
+        (5,0):pg.transform.rotozoom(kk_img, 0, 1.0),
+        (5,-5):pg.transform.rotozoom(kk_img, 315, 1.0),
+        (0,-5):pg.transform.rotozoom(kk_img, 270, 1.0),
+        (-5,-5):pg.transform.rotozoom(kk_img, 315, 1.0),
+        (-5,0):pg.transform.rotozoom(kk_img, 0, 1.0),
+        (-5,5):pg.transform.rotozoom(kk_img, 45, 1.0),
+        (0,5):pg.transform.rotozoom(kk_img, 90, 1.0),
+        (5,5):pg.transform.rotozoom(kk_img, 45, 1.0)
+    }
 
     clock = pg.time.Clock()
     tmr = 0
@@ -50,6 +62,7 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
+
         if kk_rct.colliderect(bd_rct):  # 練習５
             print("ゲームオーバー")
             return   # ゲームオーバー 
@@ -63,6 +76,13 @@ def main():
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
+
+        if(sum_mv[0] >= 5):
+            kk_img = pg.transform.flip(kk_img, False, True)
+        if sum_mv != [0, 0]:
+            kk_img = kk_zis[tuple(sum_mv)]
+            if sum_mv[0] >= 5:
+                kk_img = pg.transform.flip(kk_img, True, False)
  
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, kk_rct)
@@ -75,14 +95,6 @@ def main():
         screen.blit(bd_img, bd_rct)
         pg.display.update()
         tmr += 1
-
-        # if kk_x <= 0 or kk_x >= 800 - kk_img.get_width():
-        #     kk_speed_x *= -1
-        # if kk_y <= 0 or kk_y >= 600 - kk_img.get_height():
-        #     kk_speed_y *= -1
-        # if kk_y <= 200 or kk_y >= 300:
-        #     kk_speed_y *= -1
-
         clock.tick(50)
 
 
