@@ -45,7 +45,7 @@ def main():
     # 爆弾Rectの中心座標を乱数で指定する
     bd_rct.center = x, y 
     vx, vy = +5, +5  # 練習２
-    kk_zis = {
+    kk_zis = {  # 辞書作成
         (5,0):pg.transform.rotozoom(kk_img, 0, 1.0),
         (5,-5):pg.transform.rotozoom(kk_img, 315, 1.0),
         (0,-5):pg.transform.rotozoom(kk_img, 270, 1.0),
@@ -58,6 +58,10 @@ def main():
 
     clock = pg.time.Clock()
     tmr = 0
+    ###
+    bd_size = 20  # 爆弾の初期サイズ
+    bd_expand = True  # 爆弾の拡大フラグ
+    ###
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -83,6 +87,20 @@ def main():
             kk_img = kk_zis[tuple(sum_mv)]
             if sum_mv[0] >= 5:
                 kk_img = pg.transform.flip(kk_img, True, False)
+
+        
+        """
+        試行錯誤の足跡
+        """
+        # angle = 0
+        # if sum_mv[0] < 0:  # 左方向への移動
+        #     angle = 90
+        # elif sum_mv[0] > 0:  # 右方向への移動
+        #     angle = 270
+        # elif sum_mv[1] < 0:  # 上方向への移動
+        #     angle = 0
+        # elif sum_mv[1] > 0:  # 下方向への移動
+        #     angle = 180
  
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, kk_rct)
@@ -92,6 +110,17 @@ def main():
             vx *= -1
         if not tate:  # 縦方向に範囲外だったら
             vy *= -1
+        if bd_expand:
+            bd_size += 1  # サイズを1増やす
+            if bd_size >= 500:  # 最大サイズに達したら
+                bd_expand = False
+        # else:
+        #     bd_size -= 1  # サイズを1減らす
+        #     if bd_size <= 20:  # 最小サイズに達したら
+        #         bd_expand = True
+        bd_img = pg.Surface((bd_size, bd_size))  # 爆弾のサイズを変更
+        bd_img.set_colorkey((0, 0, 0))  # 黒い部分を透明にする
+        pg.draw.circle(bd_img, (255, 0, 0), (bd_size // 2, bd_size // 2), bd_size // 2)
         screen.blit(bd_img, bd_rct)
         pg.display.update()
         tmr += 1
